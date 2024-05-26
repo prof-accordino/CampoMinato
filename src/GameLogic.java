@@ -4,20 +4,27 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Bottoni implements MouseListener
+public class GameLogic implements MouseListener
 {
 	private boolean gameOver = false;
-	public Bottoni(int righe, int colonne, int bomb_prob)
+	private int bomb_number;
+	JLabel statusLabel;
+	ArrayList<Tile> tiles;
+	
+	public GameLogic(ArrayList<Tile> tiles, JLabel statusLabel)
 	{
-		Mainclass.statusLabel = new JLabel("Caselle rimanti: " + remainingButtons());
-		Mainclass.statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		this.tiles = tiles;
+		this.statusLabel = statusLabel;
+		for (Tile t : tiles)
+			if(t.isBomb)
+				bomb_number++;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
 		Tile tile = (Tile) e.getSource();
-		
+
 		if (e.getButton() == MouseEvent.BUTTON3)
 			tile.toggleFlag();
 		else if(tile.isBomb)
@@ -26,36 +33,38 @@ public class Bottoni implements MouseListener
 			tile.setSelected(true);
 		else
 			discoverArea(tile);
-		
+
 		if(checkWin() && ! gameOver)
 			gameOver(true);
+		else
+			statusLabel.setText("Caselle rimanti: " + remainingButtons());
 	}
-	
+
 	private void gameOver(boolean win)
 	{
-		for (Tile tile : Mainclass.tiles)		
+		for (Tile tile : tiles)		
 			tile.setSelected(true);
 		gameOver = true;
-		Mainclass.statusLabel.setText("HAI " + (win ? "VINTO" : "PERSO!"));
+		statusLabel.setText("HAI " + (win ? "VINTO" : "PERSO!"));
 	}
-	
+
 	private boolean checkWin()
 	{
 		if (remainingButtons() == 0)
 			return true;
-		for (Tile tile : Mainclass.tiles)
+		for (Tile tile : tiles)
 			if(tile.flagged != tile.isBomb)
-			return false;
+				return false;
 		return true;
 	}
 
 	private int remainingButtons()
 	{
 		int toClick = 0;
-		for (Tile t : Mainclass.tiles)
-				if(t.isClean())
-					toClick++;
-		return toClick;
+		for (Tile t : tiles)
+			if(!t.isSelected())
+				toClick++;
+		return toClick - bomb_number;
 	}
 
 	private void discoverArea(Tile t)

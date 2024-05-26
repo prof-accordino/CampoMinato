@@ -16,8 +16,6 @@ public class Tile extends JToggleButton
 	final int i, j;
 	int nearBombs = 0;
 	boolean flagged = false;
-	// Se non inizializzo tutta la matrice non posso fare alcune operazioni
-	private static boolean ready = false;
 	// Per facilitare i controlli metto i vicini in un array
 	private ArrayList<Tile> neighbors = new ArrayList<Tile> ();
 	
@@ -32,8 +30,6 @@ public class Tile extends JToggleButton
 	
 	public void assignNeighbors()
 	{
-		assert(ready);
-		
 		int min_i = Math.max(0, i-1);	
 		int max_i = Math.min(Mainclass.righe -1, i+1);
 		int min_j = Math.max(0, j-1);
@@ -58,11 +54,6 @@ public class Tile extends JToggleButton
 		return nearBombs == 0 && !isSelected();
 	}
 
-	public static void setReady()
-	{
-		ready = true;
-	}
-	
 	public ArrayList<Tile> getNeighbors()
 	{
 		return neighbors;
