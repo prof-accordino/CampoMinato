@@ -36,7 +36,7 @@ public class GameLogic implements MouseListener
 
 		if(checkWin() && ! gameOver)
 			gameOver(true);
-		else
+		else if(!gameOver)
 			statusLabel.setText("Caselle rimanti: " + remainingButtons());
 	}
 

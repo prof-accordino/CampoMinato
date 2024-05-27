@@ -8,7 +8,7 @@ public class Mainclass
 {
 	static int righe = 10;
 	static int colonne = 10;
-	static int bomb_prob = 1;
+	static int bomb_prob = 10;
 	static int bomb_num = 0;
 	static final int button_num = righe * colonne;
 	
